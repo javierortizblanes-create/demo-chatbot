@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Demo Chatbot</title>
+
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    iframe {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      z-index: 1;
+    }
+
+    .banner {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      padding: 10px 16px;
+      z-index: 2;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="banner">
+  Demo interactiva — implementación de prueba
+</div>
+
+<iframe id="preview"></iframe>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const site = params.get("site");
+
+  if (site) {
+    document.getElementById("preview").src = site;
+  } else {
+    document.body.innerHTML = "Falta parámetro ?site=";
+  }
+</script>
+
+<!-- AQUÍ VA TU CHATBOT DE N8N -->
+<!-- EJEMPLO -->
+<!--
+<script src="https://tu-chatbot-n8n.js"></script>
+-->
+
+</body>
+</html>
