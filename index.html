@@ -139,7 +139,6 @@
     #input button:hover {
       background: #003edc;
     }
-
   </style>
 </head>
 
@@ -179,7 +178,6 @@
 
     const messagesDiv = document.getElementById("messages");
 
-
     // ==========================
     // FUNCIONES DE CHAT
     // ==========================
@@ -200,9 +198,8 @@
       return div;
     }
 
-
     // ==========================
-    // MENSAJE INICIAL AUTOMÁTICO
+    // MENSAJE INICIAL
     // ==========================
     setTimeout(() => {
       addMessage(
@@ -210,7 +207,6 @@
         "bot"
       );
     }, 500);
-
 
     // ==========================
     // ENVÍO AL WEBHOOK
@@ -238,14 +234,24 @@
         const data = await res.json();
         typingBubble.remove();
 
-        addMessage(
-          data.reply ||
-          data.answer ||
-          data.result ||
-          JSON.stringify(data) ||
-          "No he podido responder ahora mismo.",
-          "bot"
-        );
+        let reply = "No he podido responder ahora mismo.";
+
+        // n8n normalmente devuelve un array
+        if (Array.isArray(data) && data.length > 0) {
+          reply =
+            data[0].reply ||
+            data[0].answer ||
+            data[0].result ||
+            JSON.stringify(data[0]);
+        } else if (typeof data === "object") {
+          reply =
+            data.reply ||
+            data.answer ||
+            data.result ||
+            JSON.stringify(data);
+        }
+
+        addMessage(String(reply), "bot");
 
       } catch (err) {
         typingBubble.remove();
