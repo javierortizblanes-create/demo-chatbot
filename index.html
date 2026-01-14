@@ -2,17 +2,17 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Demo Chatbot</title>
+  <title>Demo Chatbot Asesorías</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    html, body {
+    body {
       margin: 0;
-      height: 100%;
-      overflow: hidden;
       font-family: Arial, sans-serif;
     }
 
-    iframe {
+    /* Web de fondo */
+    #site-frame {
       position: fixed;
       inset: 0;
       width: 100%;
@@ -21,42 +21,70 @@
       z-index: 1;
     }
 
-    .banner {
+    /* Chat */
+    #chat-container {
       position: fixed;
-      top: 0;
-      width: 100%;
-      background: rgba(0,0,0,0.6);
-      color: white;
-      padding: 10px 16px;
+      bottom: 20px;
+      right: 20px;
+      width: 360px;
+      height: 520px;
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
       z-index: 2;
+      overflow: hidden;
+    }
+
+    #messages {
+      flex: 1;
+      padding: 12px;
+      overflow-y: auto;
       font-size: 14px;
+    }
+
+    .msg {
+      margin-bottom: 10px;
+    }
+
+    .user {
+      text-align: right;
+      color: #333;
+    }
+
+    .bot {
+      text-align: left;
+      color: #0b5cff;
+    }
+
+    #input {
+      display: flex;
+      border-top: 1px solid #ddd;
+    }
+
+    #input input {
+      flex: 1;
+      border: none;
+      padding: 10px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    #input button {
+      border: none;
+      background: #0b5cff;
+      color: white;
+      padding: 0 16px;
+      cursor: pointer;
     }
   </style>
 </head>
+
 <body>
 
-<div class="banner">
-  Demo interactiva — implementación de prueba
-</div>
+  <!-- Web del prospecto -->
+  <iframe id="site-frame"></iframe>
 
-<iframe id="preview"></iframe>
-
-<script>
-  const params = new URLSearchParams(window.location.search);
-  const site = params.get("site");
-
-  if (site) {
-    document.getElementById("preview").src = site;
-  } else {
-    document.body.innerHTML = "Falta parámetro ?site=";
-  }
-</script>
-
-<!-- AQUÍ VA TU CHATBOT DE N8N -->
-<!-- EJEMPLO -->
-<!--
-<script src="https://tu-chatbot-n8n.js"></script>
--->
-
-</body>
-</html>
+  <!-- Chat -->
+  <di
