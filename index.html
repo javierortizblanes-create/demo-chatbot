@@ -46,16 +46,20 @@
 
     .msg {
       margin-bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      max-width: 85%;
     }
 
     .user {
-      text-align: right;
-      color: #333;
+      background: #e9e9e9;
+      margin-left: auto;
     }
 
     .bot {
-      text-align: left;
-      color: #0b5cff;
+      background: #0b5cff;
+      color: white;
+      margin-right: auto;
     }
 
     #input {
@@ -96,18 +100,34 @@
   </div>
 
   <script>
-    // Cargar web de fondo desde ?site=
+    // ==========================
+    // CARGAR WEB DEL PROSPECTO
+    // ==========================
     const params = new URLSearchParams(window.location.search);
     const site = params.get("site");
 
     if (site) {
       document.getElementById("site-frame").src = site;
     } else {
-      document.body.innerHTML = "<h2 style='padding:20px'>Falta ?site=</h2>";
+      document.body.innerHTML = "<h2 style='padding:20px'>Falta ?site= en la URL</h2>";
     }
 
-    // Chat demo (respuesta simulada por ahora)
-    function send() {
+    const messagesDiv = document.getElementById("messages");
+
+
+    // ==========================
+    // CHAT FUNCIONAL
+    // ==========================
+    function addMessage(text, type) {
+      const div = document.createElement("div");
+      div.className = "msg " + type;
+      div.textContent = text;
+      messagesDiv.appendChild(div);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+
+    async function send() {
       const input = document.getElementById("text");
       const msg = input.value.trim();
       if (!msg) return;
@@ -115,16 +135,36 @@
       addMessage(msg, "user");
       input.value = "";
 
-      setTimeout(() => {
-        addMessage("Respuesta de prueba del chatbot.", "bot");
-      }, 600);
-    }
+      addMessage("Escribiendo...", "bot");
+      const loadingBubble = messagesDiv.lastChild;
 
-    function addMessage(text, type) {
-      const div = document.createElement("div");
-      div.className = "msg " + type;
-      div.textContent = text;
-      document.getElementById("messages").appendChild(div);
+      try {
+        const res = await fetch("https://ss44.app.n8n.cloud/webhook/6cca06bf-2231-488d-b63e-7d78c58b0f67", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: msg,
+            site: site || null
+          })
+        });
+
+        const data = await res.json();
+
+        loadingBubble.remove();
+
+        addMessage(
+          data.reply ||
+          data.answer ||
+          data.result ||
+          JSON.stringify(data) ||
+          "No he podido responder ahora mismo.",
+          "bot"
+        );
+
+      } catch (err) {
+        loadingBubble.remove();
+        addMessage("Error conectando con el asistente.", "bot");
+      }
     }
   </script>
 
