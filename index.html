@@ -87,4 +87,46 @@
   <iframe id="site-frame"></iframe>
 
   <!-- Chat -->
-  <di
+  <div id="chat-container">
+    <div id="messages"></div>
+    <div id="input">
+      <input id="text" placeholder="Escribe tu pregunta..." />
+      <button onclick="send()">Enviar</button>
+    </div>
+  </div>
+
+  <script>
+    // Cargar web de fondo desde ?site=
+    const params = new URLSearchParams(window.location.search);
+    const site = params.get("site");
+
+    if (site) {
+      document.getElementById("site-frame").src = site;
+    } else {
+      document.body.innerHTML = "<h2 style='padding:20px'>Falta ?site=</h2>";
+    }
+
+    // Chat demo (respuesta simulada por ahora)
+    function send() {
+      const input = document.getElementById("text");
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      addMessage(msg, "user");
+      input.value = "";
+
+      setTimeout(() => {
+        addMessage("Respuesta de prueba del chatbot.", "bot");
+      }, 600);
+    }
+
+    function addMessage(text, type) {
+      const div = document.createElement("div");
+      div.className = "msg " + type;
+      div.textContent = text;
+      document.getElementById("messages").appendChild(div);
+    }
+  </script>
+
+</body>
+</html>
