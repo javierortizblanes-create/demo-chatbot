@@ -30,8 +30,8 @@
       width: 380px;
       height: 560px;
       background: #ffffff;
-      border-radius: 18px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      border-radius: 22px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.25);
       display: flex;
       flex-direction: column;
       z-index: 2;
@@ -43,13 +43,12 @@
     #chat-header {
       background: linear-gradient(135deg,#0b5cff,#4e8cff);
       color: white;
-      padding: 16px;
+      padding: 18px;
       font-size: 16px;
       font-weight: 600;
-      letter-spacing: .3px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     #online-dot {
@@ -57,36 +56,50 @@
       height: 10px;
       background: #4df88a;
       border-radius: 50%;
-      box-shadow: 0 0 6px rgba(77,248,138,0.7);
+      box-shadow: 0 0 8px rgba(77,248,138,0.8);
     }
 
     #messages {
       flex: 1;
-      padding: 16px;
+      padding: 20px 18px;
       overflow-y: auto;
-      background: #f7f9ff;
+      background: linear-gradient(#f7f9ff, #f1f4ff);
       font-size: 14px;
     }
 
     .msg {
-      margin-bottom: 12px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      max-width: 85%;
-      line-height: 1.35em;
+      margin-bottom: 14px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      max-width: 82%;
+      line-height: 1.45em;
+      animation: fadeInUp 0.25s ease-out;
+      word-wrap: break-word;
     }
 
     .user {
-      background: #e9ecf5;
+      background: #eef1f9;
+      color: #1c1c1c;
       margin-left: auto;
-      border-bottom-right-radius: 4px;
+      border-bottom-right-radius: 6px;
     }
 
     .bot {
-      background: #0b5cff;
+      background: linear-gradient(135deg,#0b5cff,#4e8cff);
       color: white;
       margin-right: auto;
-      border-bottom-left-radius: 4px;
+      border-bottom-left-radius: 6px;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* Typing indicator */
@@ -110,34 +123,36 @@
 
     #input {
       display: flex;
-      border-top: 1px solid #ddd;
+      border-top: 1px solid #e6e9f0;
       background: white;
-      padding: 10px;
+      padding: 12px;
       gap: 8px;
     }
 
     #input input {
       flex: 1;
-      border: 1px solid #d4d8e6;
-      padding: 10px;
+      border: none;
+      padding: 12px 14px;
       font-size: 14px;
-      border-radius: 8px;
+      border-radius: 12px;
       outline: none;
+      background: #f2f4fa;
     }
 
     #input button {
       border: none;
-      background: #0b5cff;
+      background: linear-gradient(135deg,#0b5cff,#4e8cff);
       color: white;
-      padding: 0 18px;
-      border-radius: 8px;
+      padding: 0 20px;
+      border-radius: 12px;
       cursor: pointer;
       font-size: 14px;
-      transition: .2s;
+      transition: transform .15s ease, box-shadow .15s ease;
     }
 
     #input button:hover {
-      background: #003edc;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(11,92,255,0.3);
     }
   </style>
 </head>
@@ -184,9 +199,14 @@
     function addMessage(text, type) {
       const div = document.createElement("div");
       div.className = "msg " + type;
-      div.textContent = text;
+      div.style.opacity = 0;
       messagesDiv.appendChild(div);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+      setTimeout(() => {
+        div.textContent = text;
+        div.style.opacity = 1;
+      }, 30);
     }
 
     function addTyping() {
@@ -236,19 +256,10 @@
 
         let reply = "No he podido responder ahora mismo.";
 
-        // n8n normalmente devuelve un array
         if (Array.isArray(data) && data.length > 0) {
-          reply =
-            data[0].reply ||
-            data[0].answer ||
-            data[0].result ||
-            JSON.stringify(data[0]);
+          reply = data[0].reply || JSON.stringify(data[0]);
         } else if (typeof data === "object") {
-          reply =
-            data.reply ||
-            data.answer ||
-            data.result ||
-            JSON.stringify(data);
+          reply = data.reply || JSON.stringify(data);
         }
 
         addMessage(String(reply), "bot");
